@@ -10,7 +10,6 @@ import Sidebar from './components/common/GlobalSidebar';
 
 // Authentication Pages
 import Login from './pages/Login';
-import Register from './pages/Register';
 
 // Admin Components
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -71,14 +70,6 @@ function App() {
               element={
                 <ConditionalLayout>
                   <Login />
-                </ConditionalLayout>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <ConditionalLayout>
-                  <Register />
                 </ConditionalLayout>
               }
             />
