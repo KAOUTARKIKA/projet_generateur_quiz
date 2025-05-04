@@ -15,6 +15,7 @@ import Register from './pages/Register';
 // Admin Components
 import AdminDashboard from './components/admin/AdminDashboard';
 import UserManagement from './components/admin/UserManagement';
+import ProfManagement from './components/admin/profManagement'; // Import du composant
 import Statistics from './components/admin/Statistics';
 
 // Professor Components
@@ -30,6 +31,14 @@ import ResultsView from './components/student/ResultsView';
 
 import './App.css';
 
+const LayoutWithSidebar = ({ children, userRole = 'professor' }) => {
+  return (
+    <div className="app">
+      <GlobalSidebar userRole={userRole} />
+      {children}
+    </div>
+  );
+};
 // Composant de mise en page conditionnelle
 const ConditionalLayout = ({ children }) => {
   const location = useLocation();
@@ -44,8 +53,7 @@ const ConditionalLayout = ({ children }) => {
       </div>
       {/* N'affiche pas le Footer sur les pages d'authentification */}
       {!isAuthPage && <Footer />}
-      
-    </div>
+  </div>
   );
 };
 
@@ -94,6 +102,26 @@ function App() {
                 </ProtectedRoute>
               </ConditionalLayout>
             } />
+            <Route path="/admin/professors" element={ // Nouvelle route ajoutée
+              <ConditionalLayout>
+                <ProtectedRoute role="admin">
+                  <div className="dashboard-layout">
+                    <Sidebar userRole="admin" />
+                    <ProfManagement />
+                  </div>
+                </ProtectedRoute>
+              </ConditionalLayout>
+            } />
+      <Route path="/admin/dashboard" element={
+             <ConditionalLayout>
+             <ProtectedRoute role="admin">
+            <div className="dashboard-layout">
+           <Sidebar userRole="admin" />
+           <AdminDashboard />
+      </div>
+    </ProtectedRoute>
+  </ConditionalLayout>
+} />
             <Route path="/admin/statistics" element={
               <ConditionalLayout>
                 <ProtectedRoute role="admin">

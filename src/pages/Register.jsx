@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css'; // Fichier CSS partagé pour les pages d'authentification
 // Import des images
+import './AuthStyleFix.css'; 
 import logoImg from '../utils/images/logo.png';
 import googleImg from '../utils/images/google.png';
 

@@ -65,95 +65,97 @@ const ProfessorDashboard = () => {
   
   return (
     <Layout title="Tableau de Bord" userRole="professor">
-      <h2>Bienvenue, {currentUser?.name || 'Professeur'}!</h2>
-      
-      {loading ? (
-        <div className="loading">Chargement des données...</div>
-      ) : (
-        <>
-          <div className="dashboard-cards">
-            {[
-              { title: 'Total Quiz', icon: <Book size={20} color="#2ac3a2" />, value: stats.totalQuizzes },
-              { title: 'Quiz Actifs', icon: <CheckSquare size={20} color="#4285f4" />, value: stats.activeQuizzes },
-              { title: 'Étudiants', icon: <Users size={20} color="#ea4335" />, value: stats.totalStudents },
-              { title: 'Sessions Complétées', icon: <Award size={20} color="#fbbc05" />, value: stats.completedSessions }
-            ].map((card, idx) => (
-              <div className="card" key={idx}>
-                <div className="card-header">
-                  <h3>{card.title}</h3>
-                  {card.icon}
+      <div className="dashboard-container">
+        <h2 className="welcome-message">Bienvenue, {currentUser?.name || 'Professeur'}!</h2>
+        
+        {loading ? (
+          <div className="loading">Chargement des données...</div>
+        ) : (
+          <>
+            <div className="dashboard-cards">
+              {[
+                { title: 'Total Quiz', icon: <Book size={20} color="#2ac3a2" />, value: stats.totalQuizzes },
+                { title: 'Quiz Actifs', icon: <CheckSquare size={20} color="#4285f4" />, value: stats.activeQuizzes },
+                { title: 'Étudiants', icon: <Users size={20} color="#ea4335" />, value: stats.totalStudents },
+                { title: 'Sessions Complétées', icon: <Award size={20} color="#fbbc05" />, value: stats.completedSessions }
+              ].map((card, idx) => (
+                <div className="card" key={idx}>
+                  <div className="card-header">
+                    <h3>{card.title}</h3>
+                    {card.icon}
+                  </div>
+                  <div className="card-content">
+                    <p className="stat-number">{card.value}</p>
+                  </div>
                 </div>
-                <div className="card-content">
-                  <p className="stat-number">{card.value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <section className="recent-activity">
-            <div className="section-header">
-              <h2>Quiz Récents</h2>
-              <Link to="/professor/create-quiz" className="btn btn-primary">
-                <Plus size={16} />
-                Créer un Quiz
-              </Link>
+              ))}
             </div>
             
-            <div className="table-container">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Titre</th>
-                    <th>Date</th>
-                    <th>Statut</th>
-                    <th>Tentatives</th>
-                    <th>Score Moyen</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentQuizzes.map(quiz => (
-                    <tr key={quiz.id}>
-                      <td>{quiz.title}</td>
-                      <td>
-                        <Calendar size={14} style={{ marginRight: '5px', color: '#666' }} />
-                        {quiz.createdAt}
-                      </td>
-                      <td>
-                        <span className={`status-badge ${quiz.status}`}>
-                          {quiz.status === 'active' ? 'Actif' : 'Inactif'}
-                        </span>
-                      </td>
-                      <td>{quiz.attempts}</td>
-                      <td>
-                        <div className="d-flex align-center">
-                          <span style={{
-                            display: 'inline-block',
-                            width: `${quiz.avgScore}%`,
-                            height: '6px',
-                            backgroundColor: quiz.avgScore > 70 ? '#34a853' : quiz.avgScore > 50 ? '#fbbc05' : '#ea4335',
-                            borderRadius: '3px',
-                            marginRight: '8px'
-                          }}></span>
-                          {quiz.avgScore}%
-                        </div>
-                      </td>
+            <section className="recent-activity">
+              <div className="section-header">
+                <h2>Quiz Récents</h2>
+                <Link to="/professor/create-quiz" className="btn btn-primary">
+                  <Plus size={16} />
+                  Créer un Quiz
+                </Link>
+              </div>
+              
+              <div className="table-container">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Titre</th>
+                      <th>Date</th>
+                      <th>Statut</th>
+                      <th>Tentatives</th>
+                      <th>Score Moyen</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-          
-          <section className="quick-actions">
-            <h2>Actions Rapides</h2>
-            <div className="action-buttons d-flex gap-2">
-              <Link to="/professor/create-quiz" className="btn btn-primary">Créer un Quiz</Link>
-              <Link to="/professor/manage-quiz" className="btn btn-secondary">Gérer les Quiz</Link>
-              <Link to="/professor/results" className="btn btn-secondary">Voir les Résultats</Link>
-            </div>
-          </section>
-        </>
-      )}
+                  </thead>
+                  <tbody>
+                    {recentQuizzes.map(quiz => (
+                      <tr key={quiz.id}>
+                        <td>{quiz.title}</td>
+                        <td>
+                          <Calendar size={14} style={{ marginRight: '5px', color: '#666' }} />
+                          {quiz.createdAt}
+                        </td>
+                        <td>
+                          <span className={`status-badge ${quiz.status}`}>
+                            {quiz.status === 'active' ? 'Actif' : 'Inactif'}
+                          </span>
+                        </td>
+                        <td>{quiz.attempts}</td>
+                        <td>
+                          <div className="d-flex align-center">
+                            <span style={{
+                              display: 'inline-block',
+                              width: `${quiz.avgScore}%`,
+                              height: '6px',
+                              backgroundColor: quiz.avgScore > 70 ? '#34a853' : quiz.avgScore > 50 ? '#fbbc05' : '#ea4335',
+                              borderRadius: '3px',
+                              marginRight: '8px'
+                            }}></span>
+                            {quiz.avgScore}%
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            
+            <section className="quick-actions">
+              <h2>Actions Rapides</h2>
+              <div className="action-buttons d-flex gap-2">
+                <Link to="/professor/create-quiz" className="btn btn-primary">Créer un Quiz</Link>
+                <Link to="/professor/manage-quiz" className="btn btn-secondary">Gérer les Quiz</Link>
+                <Link to="/professor/results" className="btn btn-secondary">Voir les Résultats</Link>
+              </div>
+            </section>
+          </>
+        )}
+      </div>
     </Layout>
   );
 };

@@ -791,11 +791,12 @@
       display: none;
     }
     
-    .content-area,
-    .header,
-    .layout-with-sidebar {
-      margin-left: 60px;
-    }
+    .content-area {
+        flex: 1;
+        padding: 20px;
+        margin-left: 250px; /* Adjust for fixed sidebar */
+        padding-top: 80px; /* Adjust for fixed header */
+      }
     
     .dashboard-cards {
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

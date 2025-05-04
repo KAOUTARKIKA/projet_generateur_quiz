@@ -8,9 +8,9 @@ const Layout = ({ children, title = 'Tableau de Bord', userRole = 'professor' })
     <div className="layout-with-sidebar">
       <GlobalSidebar userRole={userRole} />
       <GlobalHeader title={title} />
-      <main className="content-area">
+      <div className="content-area full-width">
         {children}
-      </main>
+      </div>
     </div>
   );
 };

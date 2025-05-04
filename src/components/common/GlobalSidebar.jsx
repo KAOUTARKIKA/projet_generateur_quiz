@@ -14,8 +14,9 @@ const GlobalSidebar = ({ userRole = 'professor' }) => {
       case 'admin':
         return [
           { to: '/admin/dashboard', text: 'Tableau de Bord', icon: <Book size={18} /> },
-          { to: '/admin/users', text: 'Gestion des Utilisateurs', icon: <Users size={18} /> },
-          { to: '/admin/statistics', text: 'Statistiques', icon: <BarChart2 size={18} /> },
+          { to: '/admin/users', text: 'Gestion des Étudiants', icon: <Users size={18} /> },
+          { to: '/admin/professors', text: 'Gestion des Professeurs', icon: <Users size={18} /> },
+          
         ];
       case 'professor':
         return [

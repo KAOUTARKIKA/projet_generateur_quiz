@@ -150,7 +150,7 @@ const QuizManagement = () => {
 
   return (
     <div className="content-area">
-      <div className="header-actions">
+      <div className="header-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Gestion des Quiz</h1>
         <Link to="/professor/create-quiz" className="btn btn-primary">Créer un Quiz</Link>
       </div>

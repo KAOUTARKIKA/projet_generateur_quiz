@@ -1,7 +1,18 @@
-// components/student/StudentDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { 
+  Book, 
+  Users, 
+  CheckSquare, 
+  Award, 
+  Plus, 
+  Calendar,
+  Search,
+  CheckCircle,
+  Clock
+} from 'lucide-react';
+import Layout from '../common/Layout';
 
 const StudentDashboard = () => {
   const { currentUser } = useAuth();
@@ -176,251 +187,107 @@ const StudentDashboard = () => {
   };
 
   // Get appropriate label color based on days left
-  const getDueDateClass = (dueDate) => {
-    const daysLeft = getDaysLeft(dueDate);
-    if (daysLeft <= 1) return 'urgent';
-    if (daysLeft <= 3) return 'soon';
-    return 'normal';
+  const getDueDateClass = (daysLeft) => {
+    if (daysLeft <= 1) return 'text-red-500';
+    if (daysLeft <= 3) return 'text-orange-500';
+    return 'text-green-500';
   };
 
   // Get appropriate label color based on score
   const getScoreClass = (score) => {
-    if (score >= 80) return 'high';
-    if (score >= 60) return 'medium';
-    return 'low';
+    if (score >= 80) return 'text-green-500';
+    if (score >= 60) return 'text-orange-500';
+    return 'text-red-500';
   };
 
   if (loading) {
-    return <div className="loading">Chargement du tableau de bord...</div>;
+    return (
+      <Layout title="Tableau de Bord Étudiant" userRole="student">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Chargement du tableau de bord...</div>
+        </div>
+      </Layout>
+    );
   }
 
   return (
-    <div className="content-area">
-      <div className="welcome-banner">
-        <h1>Bienvenue, {currentUser.name}</h1>
-        <p className="dashboard-date">{new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-      </div>
-      
-      <div className="dashboard-stats">
-        <div className="stat-card">
-          <div className="stat-icon quiz-icon"></div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.totalAttempted}</div>
-            <div className="stat-label">Quiz Terminés</div>
-          </div>
+    <Layout title="Tableau de Bord Étudiant" userRole="student">
+      <div className="flex flex-col p-0 m-0 pl-6"> {/* Augmenté le padding-left à pl-6 */}
+        {/* Message de bienvenue aligné à gauche */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold">Bienvenue, {currentUser?.name || 'Étudiant'}!</h2>
         </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon score-icon"></div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.averageScore.toFixed(1)}%</div>
-            <div className="stat-label">Score Moyen</div>
-          </div>
-        </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon completion-icon"></div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.completionRate.toFixed(0)}%</div>
-            <div className="stat-label">Taux de Complétion</div>
-          </div>
-        </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon best-icon"></div>
-          <div className="stat-content">
-            <div className="stat-value">{stats.bestScore}%</div>
-            <div className="stat-label">Meilleur Score</div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="dashboard-controls">
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Rechercher des quiz..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-        
-        <div className="tabs">
-          <button
-            className={`tab ${activeTab === 'available' ? 'active' : ''}`}
-            onClick={() => setActiveTab('available')}
-          >
-            Quiz Disponibles
-          </button>
-          <button
-            className={`tab ${activeTab === 'completed' ? 'active' : ''}`}
-            onClick={() => setActiveTab('completed')}
-          >
-            Quiz Complétés
-          </button>
-          <button
-            className={`tab ${activeTab === 'upcoming' ? 'active' : ''}`}
-            onClick={() => setActiveTab('upcoming')}
-          >
-            À Venir
-          </button>
-        </div>
-      </div>
-      
-      <div className="quiz-lists">
-        {/* Available Quizzes */}
-        {activeTab === 'available' && (
-          <>
-            <h2>Quiz Disponibles</h2>
-            {filterQuizzes(availableQuizzes).length === 0 ? (
-              <div className="no-results">
-                <p>Aucun quiz disponible pour le moment.</p>
+    
+        {/* Cartes de statistiques */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          {[
+            { title: 'Meilleur Score', icon: <Award size={20} color="#fbbc05" />, value: `${stats.bestScore}%` },
+            { title: 'Taux de Complétion', icon: <CheckSquare size={20} color="#ea4335" />, value: `${stats.completionRate.toFixed(0)}%` },
+            { title: 'Score Moyen', icon: <Award size={20} color="#4285f4" />, value: `${stats.averageScore.toFixed(1)}%` },
+            { title: 'Quiz Terminés', icon: <CheckCircle size={20} color="#2ac3a2" />, value: stats.totalAttempted }
+          ].map((card, idx) => (
+            <div className="bg-white rounded-lg shadow p-4" key={idx}>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-sm font-medium text-gray-500">{card.title}</h3>
+                {card.icon}
               </div>
-            ) : (
-              <div className="quiz-grid">
-                {filterQuizzes(availableQuizzes).map(quiz => (
-                  <div className="quiz-card" key={quiz.id}>
-                    <div className="quiz-card-header">
-                      <h3>{quiz.title}</h3>
-                      <span className="category-badge">{quiz.category}</span>
+              <div className="mt-1">
+                <p className="text-2xl font-semibold">{card.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+    
+        {/* Cartes des quiz */}
+        <section>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> {/* Augmentez le gap ici */}
+            {filterQuizzes(availableQuizzes).map(quiz => {
+              const daysLeft = getDaysLeft(quiz.dueDate);
+              return (
+                <div className="bg-white rounded-lg shadow overflow-hidden" key={quiz.id}>
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-4"> {/* Ajout d'un espace ici */}
+                      <h3 className="text-lg font-medium line-clamp-1">{quiz.title}</h3>
+                      <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">{quiz.category}</span>
                     </div>
-                    <div className="quiz-card-body">
-                      <p className="quiz-description">{quiz.description}</p>
-                      <div className="quiz-meta">
-                        <div className="meta-item">
-                          <span className="meta-label">Créé par:</span>
-                          <span className="meta-value">{quiz.createdBy}</span>
-                        </div>
-                        <div className="meta-item">
-                          <span className="meta-label">Questions:</span>
-                          <span className="meta-value">{quiz.questionsCount}</span>
-                        </div>
-                        <div className="meta-item">
-                          <span className="meta-label">Temps:</span>
-                          <span className="meta-value">{quiz.timeLimit} min</span>
-                        </div>
-                        <div className="meta-item">
-                          <span className="meta-label">Date limite:</span>
-                          <span className={`meta-value due-date ${getDueDateClass(quiz.dueDate)}`}>
-                            {formatDate(quiz.dueDate)} 
-                            ({getDaysLeft(quiz.dueDate)} jours restants)
-                          </span>
-                        </div>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{quiz.description}</p>
+                    <div className="grid grid-cols-2 gap-2 text-sm mb-4">
+                      <div>
+                        <span className="text-gray-500">Créé par:</span>
+                        <p>{quiz.createdBy}</p>
                       </div>
-                    </div>
-                    <div className="quiz-card-footer">
-                      <Link to={`/student/quiz/${quiz.id}`} className="btn btn-primary">
-                        Commencer
-                      </Link>
+                      <div>
+                        <span className="text-gray-500">Questions:</span>
+                        <p>{quiz.questionsCount}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Temps:</span>
+                        <p>{quiz.timeLimit} min</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Date limite:</span>
+                        <p className={getDueDateClass(daysLeft)}>
+                          {formatDate(quiz.dueDate)}
+                          <span className="block text-xs">({daysLeft} jours restants)</span>
+                        </p>
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-        
-        {/* Completed Quizzes */}
-        {activeTab === 'completed' && (
-          <>
-            <h2>Quiz Complétés</h2>
-            {filterQuizzes(completedQuizzes).length === 0 ? (
-              <div className="no-results">
-                <p>Vous n'avez pas encore complété de quiz.</p>
-              </div>
-            ) : (
-              <div className="quiz-grid">
-                {filterQuizzes(completedQuizzes).map(quiz => (
-                  <div className="quiz-card" key={quiz.id}>
-                    <div className="quiz-card-header">
-                      <h3>{quiz.title}</h3>
-                      <span className="category-badge">{quiz.category}</span>
-                    </div>
-                    <div className="quiz-card-body">
-                      <p className="quiz-description">{quiz.description}</p>
-                      <div className="quiz-result">
-                        <div className={`score-badge ${getScoreClass(quiz.score)}`}>
-                          {quiz.score}%
-                        </div>
-                        <div className="points">
-                          {quiz.earnedPoints}/{quiz.totalPoints} points
-                        </div>
-                      </div>
-                      <div className="quiz-meta">
-                        <div className="meta-item">
-                          <span className="meta-label">Créé par:</span>
-                          <span className="meta-value">{quiz.createdBy}</span>
-                        </div>
-                        <div className="meta-item">
-                          <span className="meta-label">Complété le:</span>
-                          <span className="meta-value">{formatDate(quiz.attemptedAt)}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="quiz-card-footer">
-                      <Link to={`/student/results/${quiz.id}`} className="btn btn-secondary">
-                        Voir les détails
-                      </Link>
-                    </div>
+                  <div className="bg-gray-50 p-3 border-t">
+                    <Link
+                      to={`/student/quiz/${quiz.id}`}
+                      className="block w-full py-2 bg-blue-500 hover:bg-blue-600 text-white text-center rounded transition-colors"
+                    >
+                      Commencer
+                    </Link>
                   </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-        
-        {/* Upcoming Quizzes */}
-        {activeTab === 'upcoming' && (
-          <>
-            <h2>Quiz à Venir</h2>
-            {filterQuizzes(upcomingQuizzes).length === 0 ? (
-              <div className="no-results">
-                <p>Aucun quiz à venir pour le moment.</p>
-              </div>
-            ) : (
-              <div className="quiz-grid">
-                {filterQuizzes(upcomingQuizzes).map(quiz => (
-                  <div className="quiz-card upcoming" key={quiz.id}>
-                    <div className="quiz-card-header">
-                      <h3>{quiz.title}</h3>
-                      <span className="category-badge">{quiz.category}</span>
-                    </div>
-                    <div className="quiz-card-body">
-                      <p className="quiz-description">{quiz.description}</p>
-                      <div className="quiz-meta">
-                        <div className="meta-item">
-                          <span className="meta-label">Créé par:</span>
-                          <span className="meta-value">{quiz.createdBy}</span>
-                        </div>
-                        <div className="meta-item">
-                          <span className="meta-label">Questions:</span>
-                          <span className="meta-value">{quiz.questionsCount}</span>
-                        </div>
-                        <div className="meta-item">
-                          <span className="meta-label">Temps:</span>
-                          <span className="meta-value">{quiz.timeLimit} min</span>
-                        </div>
-                        <div className="meta-item">
-                          <span className="meta-label">Disponible du:</span>
-                          <span className="meta-value">
-                            {formatDate(quiz.availableFrom)} au {formatDate(quiz.availableTo)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="quiz-card-footer">
-                      <button className="btn btn-disabled" disabled>
-                        Pas encore disponible
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
       </div>
-    </div>
+    </Layout>
   );
 };
 
