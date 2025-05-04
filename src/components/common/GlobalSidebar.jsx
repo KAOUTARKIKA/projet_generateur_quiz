@@ -13,14 +13,14 @@ const GlobalSidebar = ({ userRole = 'professor' }) => {
     switch(role) {
       case 'admin':
         return [
-          { to: '/admin/dashboard', text: 'Tableau de Bord', icon: <Book size={18} /> },
+          { to: '/admin/', text: 'Tableau de Bord', icon: <Book size={18} /> },
           { to: '/admin/users', text: 'Gestion des Étudiants', icon: <Users size={18} /> },
           { to: '/admin/professors', text: 'Gestion des Professeurs', icon: <Users size={18} /> },
           
         ];
       case 'professor':
         return [
-          { to: '/professor/dashboard', text: 'Tableau de Bord', icon: <Book size={18} /> },
+          { to: '/professor/', text: 'Tableau de Bord', icon: <Book size={18} /> },
           { to: '/professor/create-quiz', text: 'Créer un Quiz', icon: <Plus size={18} /> },
           { to: '/professor/manage-quiz', text: 'Gérer les Quiz', icon: <Edit3 size={18} /> },
           { to: '/professor/results', text: 'Résultats', icon: <BarChart2 size={18} /> },
@@ -28,7 +28,7 @@ const GlobalSidebar = ({ userRole = 'professor' }) => {
         ];
       case 'student':
         return [
-          { to: '/student/dashboard', text: 'Tableau de Bord', icon: <Book size={18} /> },
+          { to: '/student/', text: 'Tableau de Bord', icon: <Book size={18} /> },
           { to: '/student/quizzes', text: 'Mes Quiz', icon: <CheckSquare size={18} /> },
           { to: '/student/results', text: 'Mes Résultats', icon: <Award size={18} /> },
         ];

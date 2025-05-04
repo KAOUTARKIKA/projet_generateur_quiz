@@ -228,12 +228,6 @@ const QuizManagement = () => {
                         {quiz.status === 'active' ? 'Désactiver' : 'Activer'}
                       </button>
                       
-                      <button 
-                        className="btn btn-info"
-                        onClick={() => duplicateQuiz(quiz.id)}
-                      >
-                        Dupliquer
-                      </button>
                       
                       <Link to={`/professor/results-analysis/${quiz.id}`} className="btn btn-secondary">
                         Résultats
